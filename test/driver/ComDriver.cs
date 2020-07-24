@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Threading;
 using System.IO.Ports;
+using System.Threading;
 
-namespace test
+namespace test.driver
 {
     public class ComDriver
     {
@@ -59,7 +58,7 @@ namespace test
 
         public void StopListening()
         {
-            _readThread.Abort();
+            _readThread.Interrupt();
         }
 
         public void Close()

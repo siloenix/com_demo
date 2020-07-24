@@ -1,0 +1,2 @@
+﻿wait: 5000
+write: hello from 23 to 24

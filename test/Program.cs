@@ -4,41 +4,45 @@
 using System;
 using System.Threading;
 using System.IO.Ports;
+using test.driver;
+using test.simulator;
 
 namespace test
 {
     public class Program
     {
-        private static bool _continue;
-
         public static void Main()
         {
-            var listenDriver = new ComDriver(new SerialPort("COM23"));
-            var writeDriver = new ComDriver(new SerialPort("COM24"));
+            var portName = "COM23";
+            var filename = "./instructions.txt";
+            var iterations = 1;
 
-            _continue = true;
+            Console.WriteLine("Enter your com port name: (default COM23)");
+            var inputPortName = Console.ReadLine();
 
-            Console.WriteLine("Type QUIT to exit");
+            Console.WriteLine("Enter your instructions file: (default ./instructions.txt)");
+            var inputFileName = Console.ReadLine();
+
+            Console.WriteLine("Enter iterations count: (default 1)");
+            var inputIterations = Console.ReadLine();
             
-            listenDriver.Listen();
-
-            var stringComparer = StringComparer.OrdinalIgnoreCase;
-            while (_continue)
+            if (inputPortName.Length > 0)
             {
-                var message = Console.ReadLine();
-
-                if (stringComparer.Equals("quit", message))
-                {
-                    _continue = false;
-                }
-                else
-                {
-                    writeDriver.Write(message);
-                }
+                portName = inputPortName;
             }
-
-            listenDriver.Close();
-            writeDriver.Close();
+            if (inputFileName.Length > 0)
+            {
+                filename = inputFileName;
+            }
+            if (inputIterations.Length > 0)
+            {
+                iterations = Int32.Parse(inputIterations);
+            }
+            
+            
+            var simulator = new Simulator(new SerialPort(portName));
+            simulator.ReadInstructions(filename);
+            simulator.Simulate(iterations);
         }
     }
 }
